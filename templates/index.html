@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection Application</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11c8cb 0%, #d30f9f 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            background-color: #fff;
+        }
+
+        .left, .right {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 12px;
+        }
+
+        .left {
+            flex: 2;
+            background-color: #f9f9f9;
+            border-right: 2px solid #e0e0e0;
+        }
+
+        .right {
+            flex: 1;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .preview {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            overflow-x: hidden;
+        }
+
+        .custom-file-input {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .custom-file-input input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-input label {
+            display: block;
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #11c8cb;
+            color: #fff;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-file-input label:hover {
+            background-color: #d30f9f;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-file-input label i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #11c8cb;
+            color: #fff;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #d30f9f;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        video:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: auto;
+            padding: 15px;
+            border-radius: 12px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .photo-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-container img {
+            aspect-ratio: 3 / 4;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .photo-name {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+            text-transform: capitalize;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #11c8cb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+
+<div class="container">
+    <div class="left">
+        <h2>Upload Video for Detection</h2>
+        <form action="/upload_video" method="POST" enctype="multipart/form-data" id="video-upload-form">
+            <div class="custom-file-input">
+                <input type="file" name="video" accept="video/*" id="video-upload" required>
+                <label for="video-upload"><i class="fas fa-video"></i> Choose Video</label>
+            </div>
+            <button type="submit">Upload Video</button>
+        </form>
+
+        <h2>Processed Video Preview</h2>
+        <video id="processed-video" controls>
+            <source src="{{ url_for('processed_video', filename=process_video_file) }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="right">
+        <h2>Upload Photos For Recognition</h2>
+        <form action="/upload_photo" method="POST" enctype="multipart/form-data">
+            <div class="custom-file-input">
+                <input type="file" name="photo" id="photo-upload" accept="image/*" multiple>
+                <label for="photo-upload"><i class="fas fa-image"></i> Choose Photos</label>
+            </div>
+            <button type="submit">Upload Photo</button>
+        </form>
+
+        <h2>Uploaded Photos</h2>
+        <div class="preview">
+            {% for photo in uploaded_photos %}
+            <div class="photo-container">
+                <img src="{{ url_for('uploaded_photo', filename=photo.filename) }}" alt="Employee Photo">
+                <div class="photo-name">{{ photo.name }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('video-upload-form').addEventListener('submit', function () {
+        document.getElementById('loading-overlay').classList.add('active');
+    });
+</script>
+
+</body>
+</html>
