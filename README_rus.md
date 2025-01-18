@@ -21,7 +21,7 @@
 /face_recognition_site
 |-- examples/
 |   |-- example.png  # Скриншот работы сайта
-|   |-- example_video.mp4 # Видео работыы детекции
+|   |-- example_video.mp4 # Видео работы детекции
 |
 |-- templates/
 |   |-- index.html
