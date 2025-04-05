@@ -100,7 +100,7 @@ pip install -r requirements.txt
 
 ![Скриншот работы сайта](examples/example.png)
 
-![Пример работы детекции](examples/example.gif)
+<img src="examples/example.gif" width="1919">
 
 ---
 
