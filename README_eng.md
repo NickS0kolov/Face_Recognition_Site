@@ -100,10 +100,7 @@ The website enables face detection and recognition in videos. Users can upload p
 
 ![Website Screenshot](examples/example.png)
 
-<video controls width="1920">
-  <source src="examples/example_video.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<img src="examples/example.gif" width="1919">
 
 ---
 
