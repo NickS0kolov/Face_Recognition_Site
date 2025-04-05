@@ -100,7 +100,7 @@ pip install -r requirements.txt
 
 ![Скриншот работы сайта](examples/example.png)
 
-[Пример работы сайта](examples/example_video.mp4)
+[Пример работы сайта](examples/example.gif)
 
 ---
 
